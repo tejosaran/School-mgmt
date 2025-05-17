@@ -1,0 +1,188 @@
+{
+    "info": {
+        "_postman_id": "random-uuid",
+        "name": "School Management API",
+        "description": "Collection of APIs for managing school data with location-based sorting.\n\n## Setup Instructions\n1. Import this collection\n2. Create an environment and set the `baseUrl` variable\n3. For local testing: set `baseUrl` to `http://localhost:3000`\n4. For production: set `baseUrl` to your deployed API URL\n\n## Available Endpoints\n- POST /addSchool - Add a new school\n- GET /listSchools - List schools sorted by distance\n- GET /health - Check API status",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Add School",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"Delhi Public School\",\n    \"address\": \"123 Education Street, Delhi\",\n    \"latitude\": 28.6139,\n    \"longitude\": 77.2090\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/addSchool",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "addSchool"
+                    ]
+                },
+                "description": "Add a new school to the database with location details.\n\nValidation Rules:\n- name: Required, string, max 255 chars\n- address: Required, string, max 500 chars\n- latitude: Required, number between -90 and 90\n- longitude: Required, number between -180 and 180\n\nExample Schools:\n1. Mumbai School:\n```json\n{\n    \"name\": \"Mumbai International School\",\n    \"address\": \"Bandra West, Mumbai\",\n    \"latitude\": 19.0596,\n    \"longitude\": 72.8295\n}\n```\n\n2. Bangalore School:\n```json\n{\n    \"name\": \"National Public School\",\n    \"address\": \"Indiranagar, Bangalore\",\n    \"latitude\": 12.9784,\n    \"longitude\": 77.6408\n}\n```"
+            },
+            "response": [
+                {
+                    "name": "Successful Response",
+                    "originalRequest": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Delhi Public School\",\n    \"address\": \"123 Education Street, Delhi\",\n    \"latitude\": 28.6139,\n    \"longitude\": 77.2090\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/addSchool"
+                        }
+                    },
+                    "status": "Created",
+                    "code": 201,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n    \"message\": \"School added successfully\",\n    \"schoolId\": 1,\n    \"school\": {\n        \"id\": 1,\n        \"name\": \"Delhi Public School\",\n        \"address\": \"123 Education Street, Delhi\",\n        \"latitude\": 28.6139,\n        \"longitude\": 77.2090\n    }\n}"
+                },
+                {
+                    "name": "Validation Error Response",
+                    "originalRequest": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"\",\n    \"address\": \"Test Address\",\n    \"latitude\": 100,\n    \"longitude\": 200\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/addSchool"
+                        }
+                    },
+                    "status": "Bad Request",
+                    "code": 400,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n    \"error\": \"Validation failed\",\n    \"details\": [\n        \"Name cannot be empty\",\n        \"Latitude must be between -90 and 90\",\n        \"Longitude must be between -180 and 180\"\n    ]\n}"
+                }
+            ]
+        },
+        {
+            "name": "List Schools",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/listSchools?latitude=28.6139&longitude=77.2090",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "listSchools"
+                    ],
+                    "query": [
+                        {
+                            "key": "latitude",
+                            "value": "28.6139",
+                            "description": "Latitude of reference point (-90 to 90)"
+                        },
+                        {
+                            "key": "longitude",
+                            "value": "77.2090",
+                            "description": "Longitude of reference point (-180 to 180)"
+                        }
+                    ]
+                },
+                "description": "Get all schools sorted by distance from provided coordinates.\n\nExample Locations:\n1. Delhi: latitude=28.6139&longitude=77.2090\n2. Mumbai: latitude=19.0760&longitude=72.8777\n3. Bangalore: latitude=12.9716&longitude=77.5946\n4. Chennai: latitude=13.0827&longitude=80.2707"
+            },
+            "response": [
+                {
+                    "name": "Successful Response",
+                    "originalRequest": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/listSchools?latitude=28.6139&longitude=77.2090"
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Delhi Public School\",\n        \"address\": \"123 Education Street, Delhi\",\n        \"latitude\": 28.6139,\n        \"longitude\": 77.2090,\n        \"distance\": 0\n    },\n    {\n        \"id\": 2,\n        \"name\": \"Modern School\",\n        \"address\": \"Barakhamba Road, New Delhi\",\n        \"latitude\": 28.6315,\n        \"longitude\": 77.2167,\n        \"distance\": 2.5\n    }\n]"
+                }
+            ]
+        },
+        {
+            "name": "Health Check",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/health",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "health"
+                    ]
+                },
+                "description": "Check if the API is running. Use this endpoint to verify the API is accessible."
+            },
+            "response": [
+                {
+                    "name": "Successful Response",
+                    "originalRequest": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/health"
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "body": "{\n    \"status\": \"OK\"\n}"
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000",
+            "type": "string"
+        }
+    ]
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management API Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .endpoint {
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        code {
+            background-color: #e0e0e0;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        pre {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .test-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .test-button:hover {
+            background-color: #45a049;
+        }
+        .response {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>School Management API Documentation</h1>
+    <p>Base URL: <code id="baseUrl">https://your-api-url.com</code></p>
+    
+    <div class="endpoint">
+        <h2>Add School</h2>
+        <p><strong>Endpoint:</strong> POST /addSchool</p>
+        <p><strong>Description:</strong> Add a new school to the database</p>
+        <p><strong>Request Body:</strong></p>
+        <pre id="addSchoolExample">
+{
+    "name": "Delhi Public School",
+    "address": "123 Education Street, Delhi",
+    "latitude": 28.6139,
+    "longitude": 77.2090
+}
+        </pre>
+        <button class="test-button" onclick="testAddSchool()">Test Add School</button>
+        <div id="addSchoolResponse" class="response"></div>
+    </div>
+
+    <div class="endpoint">
+        <h2>List Schools</h2>
+        <p><strong>Endpoint:</strong> GET /listSchools</p>
+        <p><strong>Description:</strong> Get all schools sorted by distance from provided coordinates</p>
+        <p><strong>Query Parameters:</strong></p>
+        <ul>
+            <li><code>latitude</code>: Latitude of the reference point</li>
+            <li><code>longitude</code>: Longitude of the reference point</li>
+        </ul>
+        <p><strong>Example:</strong></p>
+        <code>/listSchools?latitude=28.6139&longitude=77.2090</code>
+        <br>
+        <button class="test-button" onclick="testListSchools()">Test List Schools</button>
+        <div id="listSchoolsResponse" class="response"></div>
+    </div>
+
+    <div class="endpoint">
+        <h2>Health Check</h2>
+        <p><strong>Endpoint:</strong> GET /health</p>
+        <p><strong>Description:</strong> Check if the API is running</p>
+        <button class="test-button" onclick="testHealth()">Test Health</button>
+        <div id="healthResponse" class="response"></div>
+    </div>
+
+    <script>
+        // Update this with your actual API URL
+        const baseUrl = window.location.origin;
+        document.getElementById('baseUrl').textContent = baseUrl;
+
+        async function testEndpoint(endpoint, method, body) {
+            try {
+                const response = await fetch(`${baseUrl}${endpoint}`, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: body ? JSON.stringify(body) : undefined
+                });
+                return await response.json();
+            } catch (error) {
+                return { error: error.message };
+            }
+        }
+
+        async function testAddSchool() {
+            const responseDiv = document.getElementById('addSchoolResponse');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = 'Testing...';
+            
+            const testData = {
+                name: "Delhi Public School",
+                address: "123 Education Street, Delhi",
+                latitude: 28.6139,
+                longitude: 77.2090
+            };
+            
+            const result = await testEndpoint('/addSchool', 'POST', testData);
+            responseDiv.textContent = JSON.stringify(result, null, 2);
+        }
+
+        async function testListSchools() {
+            const responseDiv = document.getElementById('listSchoolsResponse');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = 'Testing...';
+            
+            const result = await testEndpoint('/listSchools?latitude=28.6139&longitude=77.2090', 'GET');
+            responseDiv.textContent = JSON.stringify(result, null, 2);
+        }
+
+        async function testHealth() {
+            const responseDiv = document.getElementById('healthResponse');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = 'Testing...';
+            
+            const result = await testEndpoint('/health', 'GET');
+            responseDiv.textContent = JSON.stringify(result, null, 2);
+        }
+    </script>
+</body>
+</html> 
