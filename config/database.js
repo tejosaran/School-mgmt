@@ -2,11 +2,11 @@ const mysql = require('mysql2');
 require('dotenv').config();
 
 const pool = mysql.createPool({
-  host: 'your-host.region.rds.amazonaws.com',
-  user: 'your-cloud-username',
+host: 'mydb.abcd1234.us-east-1.rds.amazonaws.com',
+  user: 'admin',
   password: '2002',
-  database: 'school_management'
-  
+  database: 'school',
+  port: 3306,
 });
 
 // Convert pool to use promises
