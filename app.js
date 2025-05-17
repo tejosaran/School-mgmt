@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const db = require('./config/database');
 require('dotenv').config();
 
@@ -8,11 +9,16 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public')); // Serve static files from public directory
 
-// Root endpoint redirects to documentation
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
+// Documentation route (HTML)
+app.get('/docs', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// API Routes (JSON)
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'OK' });
 });
 
 // Validation functions
@@ -140,9 +146,14 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c; // Distance in kilometers
 }
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.json({ status: 'OK' });
+// Root endpoint redirects to documentation
+app.get('/', (req, res) => {
+    res.redirect('/docs');
+});
+
+// Handle 404 errors
+app.use((req, res) => {
+    res.status(404).json({ error: 'Endpoint not found' });
 });
 
 const PORT = process.env.PORT || 3000;
